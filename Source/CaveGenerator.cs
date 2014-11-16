@@ -1,10 +1,8 @@
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using System.ComponentModel;
-using Microsoft.Xna.Framework;
-
+using System.Linq;
 
 namespace MapGen
 {
@@ -147,9 +145,7 @@ namespace MapGen
 		/// </summary>
 		private void BuildCaves()
 		{
-
 			Map = new int[MapSize.X, MapSize.Y];
-
 
 			//go through each map cell and randomly determine whether to close it
 			//the +5 offsets are to leave an empty border round the edge of the map
@@ -173,9 +169,6 @@ namespace MapGen
 					Point_Set(cell, 0);
 			}
 
-
-
-			//
 			//  Smooth of the rough cave edges and any single blocks by making several 
 			//  passes on the map and removing any cells with 3 or more empty neighbours
 			//
@@ -195,9 +188,7 @@ namespace MapGen
 					}
 			}
 
-			//
-			//  fill in any empty cells that have 4 full neighbours
-			//  to get rid of any holes in an cave
+			//  fill in any empty cells that have 4 full neighbours to get rid of any holes in an cave
 			//
 			for (int x = 0; x < MapSize.X; x++)
 				for (int y = 0; y < MapSize.Y; y++)
@@ -215,6 +206,7 @@ namespace MapGen
 		#endregion
 
 		#region locate caves
+
 		/// <summary>
 		/// Locate the edge of the specified cave
 		/// </summary>
@@ -226,7 +218,6 @@ namespace MapGen
 		{
 			do
 			{
-
 				//random point in cave
 				pCavePoint = pCave.ToList()[rnd.Next(0, pCave.Count())];
 
@@ -242,9 +233,6 @@ namespace MapGen
 						return;
 
 				} while (true);
-
-
-
 			} while (true);
 		}
 
@@ -282,7 +270,6 @@ namespace MapGen
 							Caves.Add(Cave);
 					}
 				}
-
 		}
 
 		/// <summary>
@@ -441,8 +428,6 @@ namespace MapGen
 					if (Point_Check(new Point(pLocation.X + p.X, pLocation.Y + p.Y)))
 						if (Point_Get(new Point(pLocation.X + p.X, pLocation.Y + p.Y)) == 0)
 							validdirections.Add(p);
-
-
 			} while (validdirections.Count == 0);
 
 			pDirection = validdirections[rnd.Next(0, validdirections.Count)];
@@ -459,7 +444,6 @@ namespace MapGen
 		/// <returns></returns>
 		private List<Point> Corridor_Attempt(Point pStart, Point pDirection, bool pPreventBackTracking)
 		{
-
 			List<Point> lPotentialCorridor = new List<Point>();
 			lPotentialCorridor.Add(pStart);
 
@@ -493,7 +477,6 @@ namespace MapGen
 						return null;
 
 					lPotentialCorridor.Add(pStart);
-
 				}
 
 				if (pTurns > 1)
@@ -508,9 +491,7 @@ namespace MapGen
 
 		private bool Corridor_PointTest(Point pPoint, Point pDirection)
 		{
-
-			//using the property corridor space, check that number of cells on
-			//either side of the point are empty
+			//using the property corridor space, check that number of cells on either side of the point are empty
 			foreach (int r in Enumerable.Range(-CorridorSpace, 2 * CorridorSpace + 1).ToList())
 			{
 				if (pDirection.X == 0)//north or south
@@ -525,7 +506,6 @@ namespace MapGen
 						if (Point_Get(new Point(pPoint.X, pPoint.Y + r)) != 0)
 							return false;
 				}
-
 			}
 
 			return true;
@@ -595,7 +575,6 @@ namespace MapGen
 						Direction_Reverse(NewDir) == pDir
 						 | Direction_Reverse(NewDir) == pDirExclude
 					);
-
 
 			return NewDir;
 		}

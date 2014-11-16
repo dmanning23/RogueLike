@@ -29,10 +29,7 @@ namespace MapGen
 			MapX = 99;
 			MapY = 99;
 			CloseCellProb = 45;
-
 		}
-
-
 
 		/// <summary>
 		/// Build a Map
@@ -47,9 +44,7 @@ namespace MapGen
 		/// <returns></returns>
 		public void go()
 		{
-
 			Map = new int[MapX, MapY];
-
 
 			//go through each cell and use the specified probability to determine if it's open
 			for (int x = 0; x < Map.GetLength(0); x++)
@@ -91,8 +86,6 @@ namespace MapGen
 						Map[rX, rY] = 1;
 					}
 				}
-
-
 			}
 		}
 
@@ -129,10 +122,7 @@ namespace MapGen
 			if (x >= 0 & x < Map.GetLength(0) &
 				y >= 0 & y < Map.GetLength(1))
 			{
-				if (Map[x, y] > 0)
-					return true;
-				else
-					return false;
+				return (Map[x, y] > 0);
 			}
 			else
 			{

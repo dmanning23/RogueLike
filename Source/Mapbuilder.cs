@@ -1,9 +1,8 @@
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
-using Microsoft.Xna.Framework;
 
 namespace MapGen
 {
@@ -13,6 +12,8 @@ namespace MapGen
 	/// </summary>
 	class Mapbuilder
 	{
+		#region Properties
+
 		public int[,] map;
 
 		/// <summary>
@@ -59,7 +60,6 @@ namespace MapGen
 		[Category("Corridor"), Description("The distance a corridor has to be away from a closed cell for it to be built"), DisplayName("Corridor Spacing")]
 		public int CorridorSpace { get; set; }
 
-
 		[Category("Probability"), Description("Probability of building a corridor from a room or corridor. Greater than value = room"), DisplayName("Select room")]
 		public int BuildProb { get; set; }
 
@@ -68,8 +68,6 @@ namespace MapGen
 		[Category("Map"), DisplayName("Break Out"), Description("")]
 		public int BreakOut { get; set; }
 
-
-
 		#endregion
 
 		/// <summary>
@@ -77,21 +75,14 @@ namespace MapGen
 		/// </summary>
 		enum CorridorItemHit
 		{
-
-			invalid //invalid point generated
-			,
-			self  //corridor hit self
-				,
-			existingcorridor //hit a built corridor
-				,
-			originroom //corridor hit origin room 
-				,
-			existingroom //corridor hit existing room
-				,
-			completed //corridor built without problem    
-				,
-			tooclose
-				, OK //point OK
+			invalid, //invalid point generated
+			self, //corridor hit self
+			existingcorridor, //hit a built corridor
+			originroom, //corridor hit origin room 
+			existingroom, //corridor hit existing room
+			completed, //corridor built without problem    
+			tooclose,
+			OK //point OK
 		}
 
 		Point[] directions_straight = new Point[]{ 
@@ -105,6 +96,10 @@ namespace MapGen
 		private int emptycell = 0;
 
 		Random rnd = new Random();
+
+		#endregion //Properties
+
+		#region Methods
 
 		public Mapbuilder(int x, int y)
 		{
@@ -274,7 +269,6 @@ namespace MapGen
 			Room_Build();
 		}
 
-
 		/// <summary>
 		/// Place a start room anywhere on the map
 		/// </summary>
@@ -397,7 +391,6 @@ namespace MapGen
 
 			return Room_Verify();
 		}
-
 
 		/// <summary>
 		/// Randomly get a point on the edge of a randomly selected room
@@ -600,7 +593,6 @@ namespace MapGen
 			return CorridorItemHit.OK;
 		}
 
-
 		#endregion
 
 		#region direction methods
@@ -747,5 +739,6 @@ namespace MapGen
 		public delegate void moveDelegate();
 		public event moveDelegate playerMoved;
 
+		#endregion //Methods
 	}
 }
