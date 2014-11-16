@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using Microsoft.Xna.Framework;
 
 namespace RogueLikeMapBuilder
 {
@@ -10,7 +11,7 @@ namespace RogueLikeMapBuilder
     /// This class demonstrates a simple map builder for a roguelike game. For a detailed
     /// look at using it, go here http://www.evilscience.co.uk/?p=553
     /// </summary>
-    class csMapbuilder
+    class Mapbuilder
     {
         public int[,] map;
 
@@ -34,14 +35,13 @@ namespace RogueLikeMapBuilder
         /// </summary>
         private Rectangle rctCurrentRoom;
 
-
         #region builder public properties
 
         //room properties
         [Category("Room"), Description("Minimum Size"), DisplayName("Minimum Size")]
-        public Size Room_Min { get; set; }
+        public Point Room_Min { get; set; }
         [Category("Room"), Description("Max Size"), DisplayName("Maximum Size")]
-        public Size Room_Max { get; set; }
+        public Point Room_Max { get; set; }
         [Category("Room"), Description("Total number"), DisplayName("Rooms to build")]
         public int MaxRooms { get; set; }
         [Category("Room"), Description("Minimum distance between rooms"), DisplayName("Distance from other rooms")]
@@ -64,7 +64,7 @@ namespace RogueLikeMapBuilder
         public int BuildProb { get; set; }
 
         [Category("Map"), DisplayName("Map Size")]
-        public Size Map_Size { get; set; }
+        public Point Map_Size { get; set; }
         [Category("Map"), DisplayName("Break Out"), Description("")]
         public int BreakOut { get; set; }
 
@@ -106,17 +106,17 @@ namespace RogueLikeMapBuilder
 
         Random rnd = new Random();
 
-        public csMapbuilder(int x, int y)
+        public Mapbuilder(int x, int y)
         {
-            Map_Size = new Size(x, y);
-            map = new int[Map_Size.Width, Map_Size.Height];
+            Map_Size = new Point(x, y);
+            map = new int[Map_Size.X, Map_Size.Y];
             Corridor_MaxTurns = 5;
-            Room_Min = new Size(3, 3);
-            Room_Max = new Size(15, 15);
+            Room_Min = new Point(3, 3);
+            Room_Max = new Point(15, 15);
             Corridor_Min = 3;
             Corridor_Max = 15;
             MaxRooms = 15;
-            Map_Size = new Size(150, 150);
+            Map_Size = new Point(150, 150);
 
             RoomDistance = 5;
             CorridorDistance = 2;
@@ -135,9 +135,9 @@ namespace RogueLikeMapBuilder
             rctBuiltRooms = new List<Rectangle>();
             lBuilltCorridors = new List<Point>();
 
-            map = new int[Map_Size.Width, Map_Size.Height];
-            for (int x = 0; x < Map_Size.Width; x++)
-                for (int y = 0; y < Map_Size.Width; y++)
+            map = new int[Map_Size.X, Map_Size.Y];
+            for (int x = 0; x < Map_Size.X; x++)
+                for (int y = 0; y < Map_Size.X; y++)
                     map[x, y] = filledcell;
         }
 
@@ -256,7 +256,6 @@ namespace RogueLikeMapBuilder
 
         #endregion
 
-
         #region room utilities
 
         /// <summary>
@@ -266,12 +265,12 @@ namespace RogueLikeMapBuilder
         {
             rctCurrentRoom = new Rectangle()
             {
-                Width = rnd.Next(Room_Min.Width, Room_Max.Width)
+                Width = rnd.Next(Room_Min.X, Room_Max.X)
                 ,
-                Height = rnd.Next(Room_Min.Height, Room_Max.Height)
+                Height = rnd.Next(Room_Min.Y, Room_Max.Y)
             };
-            rctCurrentRoom.X = Map_Size.Width / 2;
-            rctCurrentRoom.Y = Map_Size.Height / 2;
+            rctCurrentRoom.X = Map_Size.X / 2;
+            rctCurrentRoom.Y = Map_Size.Y / 2;
             Room_Build();
         }
 
@@ -301,19 +300,19 @@ namespace RogueLikeMapBuilder
                     //room at the top of the map
                     rctCurrentRoom = new Rectangle()
                             {
-                                Width = rnd.Next(Room_Min.Width, Room_Max.Width)
-                                , Height = rnd.Next(Room_Min.Height, Room_Max.Height)
+                                Width = rnd.Next(Room_Min.X, Room_Max.X)
+                                , Height = rnd.Next(Room_Min.Y, Room_Max.Y)
                             };
-                    rctCurrentRoom.X = rnd.Next(0, Map_Size.Width - rctCurrentRoom.Width);
+                    rctCurrentRoom.X = rnd.Next(0, Map_Size.X - rctCurrentRoom.Width);
                     rctCurrentRoom.Y = 1;
                     Room_Build();
 
                     //at the bottom of the map
                     rctCurrentRoom = new Rectangle();
-                    rctCurrentRoom.Width = rnd.Next(Room_Min.Width, Room_Max.Width);
-                    rctCurrentRoom.Height = rnd.Next(Room_Min.Height, Room_Max.Height);
-                    rctCurrentRoom.X = rnd.Next(0, Map_Size.Width - rctCurrentRoom.Width);
-                    rctCurrentRoom.Y = Map_Size.Height - rctCurrentRoom.Height - 1;
+                    rctCurrentRoom.Width = rnd.Next(Room_Min.X, Room_Max.X);
+                    rctCurrentRoom.Height = rnd.Next(Room_Min.Y, Room_Max.Y);
+                    rctCurrentRoom.X = rnd.Next(0, Map_Size.X - rctCurrentRoom.Width);
+                    rctCurrentRoom.Y = Map_Size.Y - rctCurrentRoom.Height - 1;
                     Room_Build();
 
 
@@ -322,17 +321,17 @@ namespace RogueLikeMapBuilder
                 {
                     //west side of room
                     rctCurrentRoom = new Rectangle();
-                    rctCurrentRoom.Width = rnd.Next(Room_Min.Width, Room_Max.Width);
-                    rctCurrentRoom.Height = rnd.Next(Room_Min.Height, Room_Max.Height);
-                    rctCurrentRoom.Y = rnd.Next(0, Map_Size.Height - rctCurrentRoom.Height);
+                    rctCurrentRoom.Width = rnd.Next(Room_Min.X, Room_Max.X);
+                    rctCurrentRoom.Height = rnd.Next(Room_Min.Y, Room_Max.Y);
+                    rctCurrentRoom.Y = rnd.Next(0, Map_Size.Y - rctCurrentRoom.Height);
                     rctCurrentRoom.X = 1;
                     Room_Build();
 
                     rctCurrentRoom = new Rectangle();
-                    rctCurrentRoom.Width = rnd.Next(Room_Min.Width, Room_Max.Width);
-                    rctCurrentRoom.Height = rnd.Next(Room_Min.Height, Room_Max.Height);
-                    rctCurrentRoom.Y = rnd.Next(0, Map_Size.Height - rctCurrentRoom.Height);
-                    rctCurrentRoom.X = Map_Size.Width - rctCurrentRoom.Width - 2;
+                    rctCurrentRoom.Width = rnd.Next(Room_Min.X, Room_Max.X);
+                    rctCurrentRoom.Height = rnd.Next(Room_Min.Y, Room_Max.Y);
+                    rctCurrentRoom.Y = rnd.Next(0, Map_Size.Y - rctCurrentRoom.Height);
+                    rctCurrentRoom.X = Map_Size.X - rctCurrentRoom.Width - 2;
                     Room_Build();
 
                 }
@@ -366,9 +365,9 @@ namespace RogueLikeMapBuilder
         {
             rctCurrentRoom = new Rectangle()
                 {
-                    Width = rnd.Next(Room_Min.Width, Room_Max.Width)
+                    Width = rnd.Next(Room_Min.X, Room_Max.X)
                     ,
-                    Height = rnd.Next(Room_Min.Height, Room_Max.Height)
+                    Height = rnd.Next(Room_Min.Y, Room_Max.Y)
                 };
 
             //startbuilding room from this point
@@ -422,7 +421,7 @@ namespace RogueLikeMapBuilder
             do
             {
                 //move in that direction
-                pLocation.Offset(pDirection);
+                pLocation += pDirection;
 
                 if (!Point_Valid(pLocation.X, pLocation.Y))
                     return;
@@ -461,7 +460,7 @@ namespace RogueLikeMapBuilder
             } while (validdirections.Count == 0);
 
             pDirection = validdirections[rnd.Next(0, validdirections.Count)];
-            pLocation.Offset(pDirection);
+            pLocation += pDirection;
 
         }
 
@@ -532,7 +531,7 @@ namespace RogueLikeMapBuilder
                     corridorlength--;
 
                     //make a point and offset it
-                    pStart.Offset(pDirection);
+                    pStart += pDirection;
 
                     outcome = Corridor_PointTest(pStart, pDirection);
                     if (outcome != CorridorItemHit.OK)
@@ -675,7 +674,7 @@ namespace RogueLikeMapBuilder
 
             //check it doesn't encroach onto existing rooms
             foreach (Rectangle r in rctBuiltRooms)
-                if (r.IntersectsWith(rctCurrentRoom))
+                if (r.Intersects(rctCurrentRoom))
                     return false;
 
             rctCurrentRoom.Inflate(-RoomDistance, -RoomDistance);

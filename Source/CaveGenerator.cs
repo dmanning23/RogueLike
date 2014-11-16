@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.ComponentModel;
+using Microsoft.Xna.Framework;
 
 
 namespace maze
@@ -13,9 +14,8 @@ namespace maze
     /// 
     /// For more info on it's use see http://www.evilscience.co.uk/?p=624
     /// </summary>
-    class csCaveGenerator
+    class CaveGenerator
     {
-
         private Random rnd;
 
         #region properties
@@ -27,9 +27,7 @@ namespace maze
         [Category("Cave Generation"), Description("The number of times to visit cells"), DisplayName("Cells to visit")]
         public int Iterations { get; set; }
         [Category("Cave Generation"), Description("The size of the map"), DisplayName("Map Size")]
-        public Size MapSize { get; set; }
-        
-
+        public Point MapSize { get; set; }
 
         [Category("Cave Cleaning"), Description("Remove rooms smaller than this value"), DisplayName("Lower Limit")]
         public int LowerLimit { get; set; }
@@ -39,7 +37,6 @@ namespace maze
         public int EmptyNeighbours { get; set; }
         [Category("Cave Cleaning"), DisplayName("Filling"), Description("Fills in holes within caves: an open cell with this number closed neighbours is filled")]
         public int EmptyCellNeighbours { get; set; }
-
 
         //corridor properties
         [Category("Corridor"), Description("Minimum corridor length"), DisplayName("Min length")]
@@ -55,7 +52,6 @@ namespace maze
 
         [Category("Generated Map"), Description("Number of caves generated"), DisplayName("Caves")]
         public int CaveNumber { get { return Caves == null ? 0 : Caves.Count; } }
-
 
         #endregion
 
@@ -105,12 +101,13 @@ namespace maze
         };
 
         #endregion
+
         #region misc
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public csCaveGenerator()
+        public CaveGenerator()
         {
             rnd = new Random(12345);
             Neighbours = 4;
@@ -120,7 +117,7 @@ namespace maze
             LowerLimit = 16;
             UpperLimit = 500;
 
-            MapSize = new Size(100, 100);
+            MapSize = new Point(100, 100);
 
             EmptyNeighbours = 3;
             EmptyCellNeighbours = 4;
@@ -133,7 +130,6 @@ namespace maze
             BreakOut = 100000;
         }
 
-
         public int Build()
         {
             BuildCaves();
@@ -141,33 +137,7 @@ namespace maze
             return Caves.Count();
         }
 
-        /// <summary>
-        /// Generate a bitmap from the contents of the map array
-        /// </summary>
-        /// <returns></returns>
-        public Bitmap GetMapImage()
-        {
-            //adjust to change the pixel size on the image
-            Size blocksize = new Size(5, 5);
-
-            Bitmap bmp = new Bitmap(MapSize.Width * blocksize.Width, MapSize.Height * blocksize.Height);
-            using (Graphics g = Graphics.FromImage(bmp))
-            {
-                using (SolidBrush sbBlack = new SolidBrush(Color.Black))
-                {
-                    for (int x = 0; x < MapSize.Width; x++)
-                        for (int y = 0; y < MapSize.Height; y++)
-                            if (Map[x, y] == 1)
-                                g.FillRectangle(sbBlack, new Rectangle(x * blocksize.Width, y * blocksize.Height, blocksize.Width, blocksize.Height));
-
-                }
-            }
-
-            return bmp;
-        }
-
 #endregion
-
 
         #region cave related
 
@@ -179,13 +149,13 @@ namespace maze
         private void BuildCaves()
         {
 
-            Map = new int[MapSize.Width, MapSize.Height];
+            Map = new int[MapSize.X, MapSize.Y];
 
 
             //go through each map cell and randomly determine whether to close it
             //the +5 offsets are to leave an empty border round the edge of the map
-            for (int x = 0; x < MapSize.Width; x++)
-                for (int y = 0; y < MapSize.Height; y++)
+            for (int x = 0; x < MapSize.X; x++)
+                for (int y = 0; y < MapSize.Y; y++)
                     if (rnd.Next(0, 100) < CloseCellProb)
                         Map[x, y] = 1;
 
@@ -194,7 +164,7 @@ namespace maze
             //Pick cells at random
             for (int x = 0; x <= Iterations; x++)
             {
-                cell = new Point(rnd.Next(0, MapSize.Width), rnd.Next(0, MapSize.Height));
+                cell = new Point(rnd.Next(0, MapSize.X), rnd.Next(0, MapSize.Y));
 
                 //if the randomly selected cell has more closed neighbours than the property Neighbours
                 //set it closed, else open it
@@ -213,8 +183,8 @@ namespace maze
             for (int ctr = 0; ctr < 5; ctr++)
             {
                 //examine each cell individually
-                for (int x = 0; x < MapSize.Width; x++)
-                    for (int y = 0; y < MapSize.Height; y++)
+                for (int x = 0; x < MapSize.X; x++)
+                    for (int y = 0; y < MapSize.Y; y++)
                     {
                         cell = new Point(x, y);
 
@@ -230,8 +200,8 @@ namespace maze
             //  fill in any empty cells that have 4 full neighbours
             //  to get rid of any holes in an cave
             //
-            for (int x = 0; x < MapSize.Width; x++)
-                for (int y = 0; y < MapSize.Height; y++)
+            for (int x = 0; x < MapSize.X; x++)
+                for (int y = 0; y < MapSize.Y; y++)
                 {
                     cell = new Point(x, y);
 
@@ -265,7 +235,7 @@ namespace maze
 
                 do
                 {
-                    pCavePoint.Offset(pDirection);
+                    pCavePoint += pDirection;
 
                     if (!Point_Check(pCavePoint))
                         break;
@@ -290,8 +260,8 @@ namespace maze
             Point cell;
 
             //examine each cell in the map...
-            for (int x = 0; x < MapSize.Width; x++)
-                for (int y = 0; y < MapSize.Height; y++)
+            for (int x = 0; x < MapSize.X; x++)
+                for (int y = 0; y < MapSize.Y; y++)
                 {
                     cell = new Point(x, y);
                     //if the cell is closed, and that cell doesn't occur in the list of caves..
@@ -477,7 +447,7 @@ namespace maze
             } while (validdirections.Count == 0);
 
             pDirection = validdirections[rnd.Next(0, validdirections.Count)];
-            pLocation.Offset(pDirection);
+            pLocation += pDirection;
 
         }
 
@@ -510,7 +480,7 @@ namespace maze
                     corridorlength--;
 
                     //make a point and offset it
-                    pStart.Offset(pDirection);
+                    pStart += pDirection;
 
                     if (Point_Check(pStart) && Point_Get(pStart) == 1)
                     {
@@ -647,7 +617,7 @@ namespace maze
         /// <returns></returns>
         private bool Point_Check(Point p)
         {
-            return p.X >= 0 & p.X < MapSize.Width & p.Y >= 0 & p.Y < MapSize.Height;
+            return p.X >= 0 & p.X < MapSize.X & p.Y >= 0 & p.Y < MapSize.Y;
         }
 
         /// <summary>
@@ -671,10 +641,5 @@ namespace maze
         }
 
         #endregion
-
-
-
     }
 }
-
-

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-
+using Microsoft.Xna.Framework;
 
 namespace map
 {
@@ -22,7 +22,7 @@ namespace map
     /// </summary>
     public class FOVRecurse
     {
-        public Size MapSize { get; set; }
+        public Point MapSize { get; set; }
         public int[,] map { get; private set; }
 
         /// <summary>
@@ -45,8 +45,8 @@ namespace map
 
         public FOVRecurse()
         {
-            MapSize = new Size(100, 100);
-            map = new int[MapSize.Width, MapSize.Height];
+            MapSize = new Point(100, 100);
+            map = new int[MapSize.X, MapSize.Y];
             VisualRange = 5;
         }
 
@@ -451,7 +451,6 @@ namespace map
         }
 
         #endregion
-
 
         //event raised when a player has successfully moved
         public delegate void moveDelegate();

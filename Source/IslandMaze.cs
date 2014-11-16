@@ -1,3 +1,5 @@
+using System;
+
 /// <summary>
     /// IslandMaze class - generates simple islands and mazes.
     /// 
@@ -121,7 +123,7 @@
         /// <param name="x">cell X value</param>
         /// <param name="y">cell Y value</param>
         /// <returns>Cell state - true if closed, false if open or illegal</returns>
-        private Boolean checkCell(int x, int y)
+        private bool checkCell(int x, int y)
         {
             if (x >= 0 & x < Map.GetLength(0) &
                 y >= 0 & y < Map.GetLength(1))
