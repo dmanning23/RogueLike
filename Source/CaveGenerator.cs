@@ -19,33 +19,46 @@ namespace MapGen
 
 		[Category("Cave Generation"), Description("The number of closed neighbours a cell must have in order to invert it's state")]
 		public int Neighbours { get; set; }
+
 		[Category("Cave Generation"), Description("The probability of closing a visited cell")]
 		public int CloseCellProb { get; set; } //55 tends to produce 1 cave, 40 few and small caves
+
 		[Category("Cave Generation"), Description("The number of times to visit cells"), DisplayName("Cells to visit")]
 		public int Iterations { get; set; }
+
 		[Category("Cave Generation"), Description("The size of the map"), DisplayName("Map Size")]
 		public Point MapSize { get; set; }
 
+
 		[Category("Cave Cleaning"), Description("Remove rooms smaller than this value"), DisplayName("Lower Limit")]
 		public int LowerLimit { get; set; }
+
 		[Category("Cave Cleaning"), Description("Remove rooms larger than this value"), DisplayName("Upper Limit")]
 		public int UpperLimit { get; set; }
+
 		[Category("Cave Cleaning"), DisplayName("Smoothing"), Description("Removes single cells from cave edges: a cell with this number of empty neighbours is removed")]
 		public int EmptyNeighbours { get; set; }
+
 		[Category("Cave Cleaning"), DisplayName("Filling"), Description("Fills in holes within caves: an open cell with this number closed neighbours is filled")]
 		public int EmptyCellNeighbours { get; set; }
+
 
 		//corridor properties
 		[Category("Corridor"), Description("Minimum corridor length"), DisplayName("Min length")]
 		public int Corridor_Min { get; set; }
+
 		[Category("Corridor"), Description("Maximum corridor length"), DisplayName("Max length")]
 		public int Corridor_Max { get; set; }
+
 		[Category("Corridor"), Description("Maximum turns"), DisplayName("Max Turns")]
 		public int Corridor_MaxTurns { get; set; }
+
 		[Category("Corridor"), Description("The distance a corridor has to be away from a closed cell for it to be built"), DisplayName("Corridor Spacing")]
 		public int CorridorSpace { get; set; }
+
 		[Category("Corridor"), Description("When this value is exceeded, stop attempting to connect caves. Prevents the algorithm from getting stuck.")]
 		public int BreakOut { get; set; }
+
 
 		[Category("Generated Map"), Description("Number of caves generated"), DisplayName("Caves")]
 		public int CaveNumber { get { return Caves == null ? 0 : Caves.Count; } }
